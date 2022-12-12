@@ -10,8 +10,9 @@ function myError($no, $msg, $file, $line)
 }
 set_error_handler("myError");
 
-function checkLogin($login, $connect)
-{  
+//проверка существование логина при регистрации 
+function checkLogin(string $login, $connect)
+{
   $sql = "SELECT * FROM users WHERE login = ? ";
 
   $query = $connect->prepare($sql);
@@ -19,6 +20,7 @@ function checkLogin($login, $connect)
   $query->execute($params);
   //$data = $query->fetchAll();
 
+  
   if ($query->fetchAll()) {
     return false;
   } else {
@@ -26,7 +28,8 @@ function checkLogin($login, $connect)
   }
 }
 
-function addToDataBase($login, $pass, $connect)
+//добавление логина и пароля в бд
+function addToDataBase(string $login, string $pass, $connect)
 {
   $sql = "INSERT INTO users (login, pass) VALUES (:login, :pass)";
 
@@ -40,22 +43,32 @@ function addToDataBase($login, $pass, $connect)
   }
 }
 
-function checkWithDataBase($login, $pass, $connect)
+//проверка правильности логина и пароля 
+function checkWithDataBase(string $login, string $pass, $connect)
 {
-  $sql = "SELECT * FROM users WHERE pass = ? AND login = ? ";
+  $sql = "SELECT pass FROM users WHERE login = ? ";
 
   $query = $connect->prepare($sql);
-  $params = [$pass, $login];
+  $params = [$login];
   $query->execute($params);
-  //$data = $query->fetchAll();
 
-  if ($query->fetchAll()) {
-    return true;
-  } else {
+  $data = $query->fetchAll();
+
+  if ($data) {
+    foreach ($data as $row) {
+      $hash = $row['pass'];
+      if (password_verify($pass, $hash)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }else {
     return false;
   }
 }
 
+//очистка введенных данных
 function clearData($value)
 {
   $value = trim($value);
@@ -93,7 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error['login'] = '<div class="form__input-error" id = "error-login">Пользователь с таким логином уже загеристрирован, авторийзуйтесь или выберите другой логин.</div>';
         $flag_bd = 1;
       } else {
-        $result = addToDataBase($login, $pass, $connect);
+        $hash = password_hash($pass, PASSWORD_DEFAULT);
+        $result = addToDataBase($login, $hash, $connect);
         if (!$result) {
           $error['entry'] = '<div class="form__input-error" id ="error-entry">Что-то пошло не так</div>';
           $flag_bd = 1;
@@ -116,6 +130,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $new_url = 'entry_page.php';
       header('Location: ' . $new_url);
     }
-
   }
 }

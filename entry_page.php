@@ -1,4 +1,4 @@
-<?
+<?php
 error_reporting(E_ERROR | E_PARSE);
 ob_start();
 //начало сессии
@@ -45,11 +45,11 @@ if ($_SESSION['login']) {
                       if ($row["CharCode"] == "USD") {
                     ?>
                         <option selected value="<?= $row["CharCode"] ?>"><?= $row["CharCode"] ?> — <?= $row["Name"] ?></option>
-                      <?
+                      <?php
                       } else {
                       ?>
                         <option value="<?= $row["CharCode"] ?>"><?= $row["CharCode"] ?> — <?= $row["Name"] ?></option>
-                    <?
+                    <?php
                       }
                     }
                     ?>
@@ -64,11 +64,11 @@ if ($_SESSION['login']) {
                       if ($row["CharCode"] == "RUB") {
                     ?>
                         <option selected value="<?= $row["CharCode"] ?>"><?= $row["CharCode"] ?> — <?= $row["Name"] ?></option>
-                      <?
+                      <?php
                       } else {
                       ?>
                         <option value="<?= $row["CharCode"] ?>"><?= $row["CharCode"] ?> — <?= $row["Name"] ?></option>
-                    <?
+                    <?php
                       }
                     }
                     ?>
@@ -91,7 +91,7 @@ if ($_SESSION['login']) {
                 </div>
               </div>
               <div id="container" style="width:100%; height:400px;"></div>
-              <?
+              <?php
               require "inc/table.inc.php";
               ?>
             </form>
@@ -151,7 +151,7 @@ if ($_SESSION['login']) {
               let value_two = data.value_two;
               let period = data.period;
               test(value_one, value_two, period, select_from, select_into);
-              //console.log(data.usd);
+              console.log(data.text);
             }
           });
         });
@@ -160,5 +160,5 @@ if ($_SESSION['login']) {
   </body>
 
   </html>
-<?
+<?php
 } else header('Location: ' . 'index.php');

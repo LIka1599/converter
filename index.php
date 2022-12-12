@@ -1,4 +1,4 @@
-<?
+<?php
   ob_start();
   error_reporting(E_ERROR | E_PARSE);
   
@@ -34,11 +34,10 @@
               <div class="col">
                 <input class="form-control login" type="text" placeholder="Введите логин" name="login">
                 <?= $error['login'] ?>
-                <input class="form-control login" type="text" placeholder="Введите пароль" name="pass">
+                <input class="form-control login"  type="password" placeholder="Введите пароль" name="pass">
                 <?= $error['pass'] ?>
                 <?= $error['entry'] ?>
               </div>
-              
             </div>
             <div class="row w-50">
               <div class="col">
@@ -50,7 +49,7 @@
               
             </div>
           </form>
-          <?
+          <?php
           require "inc/table.inc.php";
           ?>
         </div>

@@ -1,5 +1,6 @@
-<?
+<?php
 //cache
+require "config.inc.php";
 $cacheFile = __DIR__ . '/' . 'cache.txt';
 
 $flag = true; // флаг, что нужна полная обработка
@@ -8,8 +9,8 @@ $flag = true; // флаг, что нужна полная обработка
 if (file_exists($cacheFile)) {
 
   $cache = file_get_contents($cacheFile); //
-  $cache = @unserialize($cache);
-  if ($cache) {
+  $cache = unserialize($cache);
+  if ($cache && is_array($cache)) {
 
     $data = $cache[0]; //
 
@@ -24,17 +25,15 @@ if (file_exists($cacheFile)) {
     date_sub($date, date_interval_create_from_date_string('1 day')); //текущая дата минус день(обновление на ЦБ раз в день)
     $new_day = date_format($date, DATE_ATOM);
 
-    if ($new_day < $timecache) {
-      $flag = false; // если текущая дата меньше даты обновления на ЦБ, то обновлять кэш не нужно.
-    }
+    $flag = ($new_day < $timecache) ? false : true; // если текущая дата меньше даты обновления на ЦБ, то обновлять кэш не нужно.
+    // if ($new_day < $timecache) {
+    //   $flag = false;
+    // }
   }
 }
 
 // требуется полная обработка данных
 if ($flag) {
-
-  // Ссылка куда будем отправлять GET запрос
-  $url = "https://www.cbr-xml-daily.ru/daily_json.js";
 
   $object = [];
 
